@@ -6,7 +6,7 @@ var memory_tests = require('./memory_tests');
 var requester = require('./requester')
 
 var TEST_DURATION_SECONDS = 20;
-var SCHEME = 'http';
+var SCHEME = 'https';
 
 describe('stress tests', function() {
   it('can run rapid simulation for a while without errors or memory leaks', function(done) {

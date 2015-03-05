@@ -1,5 +1,6 @@
 var http = require('http');
 var https = require('https');
+var debug = require('debug')('requester');
 
 var mem_leak = [];
 
@@ -20,7 +21,6 @@ module.exports = function(method, scheme, host, path, params, cb) {
     port = 80;
   }
 
-  var rel_url = '/3/projects/' + project_id + rel_path;
   var options = {
     timeout: 0,
     method: method,
@@ -42,8 +42,8 @@ module.exports = function(method, scheme, host, path, params, cb) {
     var time_seconds = (end-start)/1000.0;
     start = null;
     end = null;
-    var timing_report =time_seconds.toFixed(1) + 's for ' + method + ' ' + rel_path;
-    debug_timing('TIMING:', timing_report);
+    var timing_report =time_seconds.toFixed(1) + 's for ' + method + ' ' + path;
+    debug('TIMING:', timing_report);
 
     // if there was no error but status codes are wrong, make that an error.
     if(!err && (status_code<200 || status_code>=300)) {
@@ -64,7 +64,7 @@ module.exports = function(method, scheme, host, path, params, cb) {
       var err_str = err.toString() + ' with ' + options.method + ' ' + options.path + ' ' + params_str;
       if(body) err_str += ' : ' + body;
       err = new Error(err_str);
-      if(res) err.status_code = status_code;
+      err.status_code = status_code;
       cb(err);
     } else {
       // basic logging

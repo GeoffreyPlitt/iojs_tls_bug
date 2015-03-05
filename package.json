@@ -2,10 +2,10 @@
   "name": "iojs_tls_bug",
   "version": "0.0.1",
   "engines": {
-    "iojs": ">= 1",
+    "iojs": ">= 1"
   },
   "scripts": {
-    "test": "mocha --expose-gc --reporter spec -- test.js",
+    "test": "mocha --expose-gc --reporter spec -- test.js"
   },
   "dependencies": {
     "debug": "^2.0.0",
