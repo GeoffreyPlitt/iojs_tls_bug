@@ -82,8 +82,9 @@ module.exports = function(method, scheme, host, path, params, cb) {
 
   function res_end() {
     status_code = res.statusCode;
-    res.removeAllListeners();
-    req.removeAllListeners();
+    req.removeListener('error', req_err);
+    res.removeListener('data', res_data);
+    res.removeListener('end', res_end);
     req.head = null;
     req = null;
     res = null;
@@ -95,8 +96,9 @@ module.exports = function(method, scheme, host, path, params, cb) {
   }
 
   function req_err(err) {
-    req.removeAllListeners();
-    res.removeAllListeners();
+    req.removeListener('error', req_err);
+    res.removeListener('data', res_data);
+    res.removeListener('end', res_end);
     req.head = null;
     req = null;
     res = null;
