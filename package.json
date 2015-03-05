@@ -1,0 +1,17 @@
+{
+  "name": "iojs_tls_bug",
+  "version": "0.0.1",
+  "engines": {
+    "iojs": ">= 1",
+  },
+  "scripts": {
+    "test": "mocha --expose-gc --reporter spec -- test.js",
+  },
+  "dependencies": {
+    "debug": "^2.0.0",
+    "moment": "~2.9.0",
+    "heapdump": "~0.3.5",
+    "memwatch": "marcominetti/node-memwatch",
+    "mocha": "^2.1.0"
+  }
+}
