@@ -74,27 +74,41 @@ module.exports = function(method, scheme, host, path, params, cb) {
     }
   }
 
+  var body = '';
   var start = new Date();
-  var req = request_lib.request(options, function(res){
-    var body = '';
-    res.on('data', function(chunk) {body += chunk;});
-    res.on('end', function() {
-      var status_code = res.statusCode;
-      res.removeAllListeners();
-      req.removeAllListeners();
-      req.head = null;
-      req = null;
-      res = null;
-      result_handler(null, status_code, body);
-    });
-  });
-  req.on('error', function(err) {
+  var status_code = null;
+  var req = null;
+  var res = null;
+
+  function res_end() {
+    status_code = res.statusCode;
+    res.removeAllListeners();
+    req.removeAllListeners();
+    req.head = null;
+    req = null;
+    res = null;
+    result_handler(null, status_code, body);
+  }
+
+  function res_data(chunk) {
+    body += chunk;
+  }
+
+  function req_err(err) {
     req.removeAllListeners();
     res.removeAllListeners();
     req.head = null;
     req = null;
     res = null;
     result_handler(err, null, null);
+  }
+
+  req = request_lib.request(options, function(_res){
+    res = _res;
+    res.on('data', res_data);
+    res.on('end', res_end);;
   });
+
+  req.on('error', req_err);
   req.end(params_str);
 }
