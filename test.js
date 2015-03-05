@@ -5,7 +5,7 @@ var assert = require('assert');
 var memory_tests = require('./memory_tests');
 var requester = require('./requester')
 
-var TEST_DURATION_SECONDS = 10;
+var TEST_DURATION_SECONDS = 15;
 var CONCURRENCY = 16;
 
 console.log('NODE VERSION:', process.version);
