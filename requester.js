@@ -4,12 +4,9 @@ var debug = require('debug')('requester');
 
 var mem_leak = [];
 
-module.exports = function(method, scheme, host, path, params, cb) {
+module.exports = function(method, scheme, host, path, cb) {
   // uncomment to simulate memory leak;
   // mem_leak.push(new Array(Math.pow(10,6)));
-
-  if(!params) params = {};
-  var params_str = JSON.stringify(params);
 
   var request_lib = null;
   var port = null;
@@ -22,28 +19,15 @@ module.exports = function(method, scheme, host, path, params, cb) {
   }
 
   var options = {
-    timeout: 0,
     method: method,
     hostname: host,
     port: port,
     path: path,
-    agent: false, // no pooling
-    headers: {
-      'Content-Length': params_str.length,
-      'Content-Type': 'application/json'
-    }
+    agent: false // no pooling
   };
 
   function result_handler(err, status_code, body) {
     var ret = null;
-
-    // timing reports/warnings
-    var end = new Date();
-    var time_seconds = (end-start)/1000.0;
-    start = null;
-    end = null;
-    var timing_report =time_seconds.toFixed(1) + 's for ' + method + ' ' + path;
-    debug('TIMING:', timing_report);
 
     // if there was no error but status codes are wrong, make that an error.
     if(!err && (status_code<200 || status_code>=300)) {
@@ -61,15 +45,10 @@ module.exports = function(method, scheme, host, path, params, cb) {
 
     // finally surface error or success
     if(err) {
-      var err_str = err.toString() + ' with ' + options.method + ' ' + options.path + ' ' + params_str;
-      if(body) err_str += ' : ' + body;
-      err = new Error(err_str);
+      err = new Error(err.toString());
       err.status_code = status_code;
       cb(err);
     } else {
-      // basic logging
-      debug(options.method, options.hostname + options.path, 'sent:', params_str, 'received:', JSON.stringify(ret));
-      //debug('HEADERS:', options.headers);
       cb(null, ret);
     }
   }
@@ -112,5 +91,5 @@ module.exports = function(method, scheme, host, path, params, cb) {
   });
 
   req.on('error', req_err);
-  req.end(params_str);
+  req.end();
 }

@@ -18,7 +18,7 @@ function run_simulation(scheme, done) {
     //assert.equal(null, err);
     if(stop) return;
     var path = '';
-    requester('GET', scheme, 'google.com', '/', {}, loop);
+    requester('GET', scheme, 'google.com', '/', loop);
   }
   for(var i=0; i<CONCURRENCY; i++) {
     loop();
