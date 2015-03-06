@@ -2,21 +2,11 @@
 
 var debug = require('debug')('iron:test_memory');
 var assert = require('assert');
-var heapdump = require('heapdump');
 var memwatch = require('memwatch');
-var moment = require('moment');
-
-function write_heap_snapshot(cb) {
-  global.gc();
-  heapdump.writeSnapshot('./' + moment().format("YYYY-MM-DD-HH-mm-ss") + '.heapsnapshot', function(err) {
-    if(cb) cb();
-  });
-}
 
 exports.memory_leak_begin = function() {
   global.gc();
   var mu = process.memoryUsage();
-  write_heap_snapshot();
   var hd = new memwatch.HeapDiff();
   debug('memory_leak_begin():', mu);
   return [mu, hd];
@@ -31,7 +21,6 @@ exports.memory_leak_end = function(context) {
   diff.change.details = diff.change.details.sort(function(a,b){return b['+'] - a['+'];})
 
   var mem_after = process.memoryUsage();
-  write_heap_snapshot();
   debug('memory_leak_end():', mem_after);
   var mem_deltas = {
     rss: mem_after.rss - mem_before.rss,
