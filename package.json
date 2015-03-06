@@ -5,7 +5,7 @@
     "iojs": ">= 1"
   },
   "scripts": {
-    "test": "mocha --expose-gc --reporter spec -- test.js"
+    "test": "mocha --expose-gc --reporter spec -- index.js"
   },
   "dependencies": {
     "memwatch": "marcominetti/node-memwatch",
