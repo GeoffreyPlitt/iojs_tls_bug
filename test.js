@@ -95,6 +95,8 @@ function run_simulation(scheme, done) {
   }, TEST_DURATION_SECONDS*1000);
 }
 
+// -------- THE TESTS --------
+
 describe('iojs http/https investigation', function() {
   it('run simulation with http', function(done) {
     this.timeout((TEST_DURATION_SECONDS+5)*1000);
