@@ -1,14 +1,34 @@
-"use strict";
+console.log('NODE VERSION:', process.version);
 
-var debug = require('debug')('iojs_tls_bug');
 var assert = require('assert');
 var memory_tests = require('./memory_tests');
-var requester = require('./requester')
+var http = require('http');
+var https = require('https');
 
 var TEST_DURATION_SECONDS = 15;
 var CONCURRENCY = 16;
 
-console.log('NODE VERSION:', process.version);
+function make_request(method, scheme, host, path, cb) {
+  var request_lib = null;
+  var port = null;
+  if(scheme==='https') {
+    request_lib = https;
+    port = 443;
+  } else {
+    request_lib = http;
+    port = 80;
+  }
+
+  var options = {
+    method: method,
+    hostname: host,
+    port: port,
+    path: path,
+    agent: false // no pooling
+  };
+
+  request_lib.request(options, cb).end();
+}
 
 function run_simulation(scheme, done) {
   var mem_before = null;
@@ -18,7 +38,7 @@ function run_simulation(scheme, done) {
     //assert.equal(null, err);
     if(stop) return;
     var path = '';
-    requester('GET', scheme, 'google.com', '/', loop);
+    make_request('GET', scheme, 'google.com', '/', loop);
   }
   for(var i=0; i<CONCURRENCY; i++) {
     loop();

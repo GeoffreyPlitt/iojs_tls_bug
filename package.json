@@ -8,7 +8,6 @@
     "test": "mocha --expose-gc --reporter spec -- test.js"
   },
   "dependencies": {
-    "debug": "^2.0.0",
     "memwatch": "marcominetti/node-memwatch",
     "mocha": "^2.1.0"
   }
